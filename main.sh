@@ -3,11 +3,12 @@
 hostname="hogwarts"
 ip="10.1.30.2"
 
-character_one="hagrid"
-password_one="Yerawizardharry..."
+character_one="harry"
+character_two="hagrid"
 
-character_two="harry"
-password_two="I'mawhat?!"
+password_one="password123"
+password_two="password123"
+
 
 #Set up the intial configuration
 
@@ -79,7 +80,90 @@ useradd -m $character_two
 
 chpasswd < /home/gerwyn/password.txt
 
-#rm /tmp/password.txt
+rm /home/gerwyn/password.txt
+
+#Add smb users
+
+echo -ne "$password_one\n$password_one\n" | smbpasswd -a -s $character_one
+echo -ne "$password_two\n$password_two\n" | smbpasswd -a -s $character_two
+
+#set up the configuration for a shared drive. 
+
+cat >> /etc/samba/smb.conf << EOF
+[Secret_Drive]
+  comment = Secret shared drive do not add files here. 
+  browseable = yes
+  writable = yes
+  path = /tmp
+  guest ok = yes
+EOF
+
+echo "Attempting to start up smbd service"
 
 service smbd start 
+
+#set up the configuration for the database element. 
+
+apt install mysql-server -y 
+
+apt install php libapache2-mod-php php-mysql -y
+
+a2enmod php8.1
+
+touch /etc/.my.cnf
+
+cat >> /etc/.my.cnf << EOF
+user=gerwyn
+password=password
+EOF
+
+service mysql start
+
+echo "Creating database exploitable."
+
+mysql -e "CREATE DATABASE IF NOT EXISTS exploitable;"
+
+echo "Using database exploitable."
+
+mysql -e "USE exploitable;"
+
+echo "Creating Table accounts"
+
+mysql -e "USE exploitable; CREATE TABLE IF NOT EXISTS accounts(cid INT NOT NULL AUTO_INCREMENT, username TEXT, password TEXT, is_admin VARCHAR(5), firstname TEXT, lastname TEXT, PRIMARY KEY(cid));"
+
+echo "Inserting data into the accounts table within the exploitable database."
+
+mysql -e "USE exploitable; INSERT INTO accounts (username, password, is_admin, firstname, lastname) VALUES ('gerwyn', 'password', 'TRUE', 'Gerwyn', 'George');"
+
+echo "show data within table accounts"
+
+mysql -e "USE exploitable; SELECT * FROM accounts;"
+
+
+
+#set up the web server element.
+
+echo "Attempting to start up Apache install"
+
+apt install apache2 -y 
+
+echo "Attempting to start apache2 service"
+
+service apache2 start
+
+echo "creating webpages."
+
+touch /var/www/html/welcome.html
+
+touch /var/www/html/contact_us.html
+
+touch /var/www/html/login.html
+
+touch /var/www/html/find_us.html
+
+touch /var/www/html/secret.html
+
+
+
+
 
