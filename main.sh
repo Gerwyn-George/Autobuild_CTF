@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 hostname="hogwarts"
-ip="10.1.30.2"
+ip="10.0.20.4"
 
 character_one="harry"
 character_two="hagrid"
@@ -10,160 +10,370 @@ password_one="password123"
 password_two="password123"
 
 
-#Set up the intial configuration
 
-echo "Changing the hostname of the machine to $hostname."
+#source hogwarts_variables.sh
+#source ACME_variables.sh
+#source Chocolate_factory_variables.sh
+#source xmen_variables.sh
 
-hostnamectl set-hostname $hostname
 
-echo "Backing up the default netplan file."
+function _set_hostname ()
+{
+    hostnamectl set-hostname $hostname
 
-mv /etc/netplan/00-installer-config.yaml /etc/netplan/00-installer-config.yaml.bk
+    if [[ $? -eq 0 ]]; then
+        echo "Hostname change: SUCCESSFUL"
+    else
+        echo "Hostname change: FAILED"
+    fi
 
-echo "Creating a network config file."
+}
 
-touch /etc/netplan/network.yaml
+function _backup_network_config ()
+{
+    if [ -f  "/etc/netplan/00-installer-config.yaml" ]; then
 
-echo "changing the IP address of the machine to $ip."
+    mv /etc/netplan/00-installer-config.yaml /etc/netplan/00-installer-config.yaml.bk
 
-cat > /etc/netplan/network.yaml << EOF
-network:
-  version: 2
-  renderer: networkd
-  ethernets:
-    enp0s3:
-      addresses:
-        - ${ip}/24
-      nameservers:
-        addresses: [8.8.8.8]
-      routes:
-        - to: default
-          via: 10.1.30.1          
+    else
+        echo "No configuration found"
+    fi
+
+    if [[ $? -eq 0 ]]; then
+        echo "Original Network configuration backup: SUCCESSFUL"
+    else
+        echo "Original Network configuration backup: FAILED"
+    fi
+
+}
+
+function _create_network_config ()
+{
+    touch /etc/netplan/network.yaml
+
+    cat > /etc/netplan/network.yaml << EOF
+    network:
+        version: 2
+        renderer: networkd
+        ethernets:
+            enp0s3:
+                addresses:
+                    - ${ip}/24
+                nameservers:
+                    addresses: [8.8.8.8]
+                routes:
+                    - to: default
+                    via: 10.1.30.254
 EOF
 
-echo "Changing the host file of the machine."
+    if [[ $? -eq 0 ]]; then
+        echo "Network configuration: SUCCESSFUL"
+    else
+        echo "Network configruation: FAILED"
+    fi
+}
 
-cat > /etc/hosts << EOF
-127.0.0.1 localhost
-127.0.1.1 ${hostname}
+function _configuring_host_file ()
+{
+    cat > /etc/hosts << EOF
+    127.0.0.1 localhost
+    127.0.1.1 ${hostname}
 
-# The following lines are desirable for IPv6 capable hosts
-::1     ip6-localhost ip6-loopback
-fe00::0 ip6-localnet
-ff00::0 ip6-mcastprefix
-ff02::1 ip6-allnodes
-ff02::2 ip6-allrouters
+    # The following lines are desirable for IPv6 capable hosts
+    ::1     ip6-localhost ip6-loopback
+    fe00::0 ip6-localnet
+    ff00::0 ip6-mcastprefix
+    ff02::1 ip6-allnodes
+    ff02::2 ip6-allrouters
 EOF
 
-#Install samba and set it up. 
+    if [[ $? -eq 0 ]]; then
+        echo "Host file configuration: SUCCESSFUL"
+    else
+        echo "Host file configuration: FAILED"
+    fi
+}
 
-echo "Downloading and Installing the Samba Server"
+function _downloading_SAMBA_application ()
+{
+#Install samba and set it up.
+    apt install samba samba-common-bin smbclient -y > /dev/null
 
-apt install samba samba-common-bin -y
-
-apt install smbclient -y 
-
+    if [[ $? -eq 0 ]]; then
+        echo "Installation of SAMBA application: SUCCESSFUL"
+    else
+        echo "Installation of SAMBA application: FAILED"
+    fi
+}
 
 #set up users
 
-touch /home/gerwyn/password.txt
+function _setting_up_SAMBA ()
+{
 
-cat > /home/gerwyn/password.txt << EOF
-$character_one:$password_one
-$character_two:$password_two
+    cat > /home/$USER/password.txt << EOF
+    $character_one:$password_one
+    $character_two:$password_two
 EOF
 
-cat /home/gerwyn/password.txt
+    cat /home/$USER/password.txt
 
-useradd -m $character_one
-useradd -m $character_two
+    useradd -m $character_one
+    useradd -m $character_two
 
-chpasswd < /home/gerwyn/password.txt
+    chpasswd < /home/$USER/password.txt
 
-rm /home/gerwyn/password.txt
+    rm /home/$USER/password.txt
 
-#Add smb users
+    echo -ne "$password_one\n$password_one\n" | smbpasswd -a -s $character_one
+    echo -ne "$password_two\n$password_two\n" | smbpasswd -a -s $character_two
 
-echo -ne "$password_one\n$password_one\n" | smbpasswd -a -s $character_one
-echo -ne "$password_two\n$password_two\n" | smbpasswd -a -s $character_two
-
-#set up the configuration for a shared drive. 
-
-cat >> /etc/samba/smb.conf << EOF
-[Secret_Drive]
-  comment = Secret shared drive do not add files here. 
-  browseable = yes
-  writable = yes
-  path = /tmp
-  guest ok = yes
+    cat >> /etc/samba/smb.conf << EOF
+    [Secret_Drive]
+    comment = Secret shared drive do not add files here.
+    browseable = yes
+    writable = yes
+    path = /tmp
+    guest ok = yes
 EOF
 
-echo "Attempting to start up smbd service"
+    service smbd start
 
-service smbd start 
+    if [[ $? -eq 0 ]]; then
+        echo "Configuration of SAMBA: SUCCESSFUL"
+    else
+        echo "Installation of SAMBA: FAILED"
+    fi
 
-#set up the configuration for the database element. 
+}
 
-apt install mysql-server -y 
 
-apt install php libapache2-mod-php php-mysql -y
+function _download_SQL ()
+{
 
-a2enmod php8.1
+    apt install mysql-server php libapache2-mod-php php-mysql -y > /dev/null
 
-touch /etc/.my.cnf
+    if [[ $? -eq 0 ]]; then
+        echo "Installation of database software: SUCCESSFUL"
+    else
+        echo "Installation of database software: FAILED"
+    fi
+}
 
-cat >> /etc/.my.cnf << EOF
-user=gerwyn
-password=password
+
+
+
+function _set_up_database ()
+{
+
+    touch /etc/.my.cnf
+
+    cat >> /etc/.my.cnf << EOF
+    user=gerwyn
+    password=password
 EOF
 
-service mysql start
+    service mysql start
 
-echo "Creating database exploitable."
+    mysql -e "CREATE DATABASE IF NOT EXISTS exploitable;"
 
-mysql -e "CREATE DATABASE IF NOT EXISTS exploitable;"
+    mysql -e "USE exploitable;"
 
-echo "Using database exploitable."
+    mysql -e "USE exploitable; CREATE TABLE IF NOT EXISTS accounts(cid INT NOT NULL AUTO_INCREMENT, username TEXT, password TEXT, is_admin VARCHAR(5), firstname TEXT, lastname TEXT, PRIMARY KEY(cid));"
 
-mysql -e "USE exploitable;"
+    mysql -e "USE exploitable; INSERT INTO accounts (username, password, is_admin, firstname, lastname) VALUES ('gerwyn', 'password', 'TRUE', 'Gerwyn', 'George');"
 
-echo "Creating Table accounts"
+    mysql -e "USE exploitable; SELECT * FROM accounts;"
 
-mysql -e "USE exploitable; CREATE TABLE IF NOT EXISTS accounts(cid INT NOT NULL AUTO_INCREMENT, username TEXT, password TEXT, is_admin VARCHAR(5), firstname TEXT, lastname TEXT, PRIMARY KEY(cid));"
-
-echo "Inserting data into the accounts table within the exploitable database."
-
-mysql -e "USE exploitable; INSERT INTO accounts (username, password, is_admin, firstname, lastname) VALUES ('gerwyn', 'password', 'TRUE', 'Gerwyn', 'George');"
-
-echo "show data within table accounts"
-
-mysql -e "USE exploitable; SELECT * FROM accounts;"
+}
 
 
 
-#set up the web server element.
+function _install_web_server ()
+{
 
-echo "Attempting to start up Apache install"
+    a2enmod php8.1
 
-apt install apache2 -y 
+    apt install apache2 -y > /dev/null
 
-echo "Attempting to start apache2 service"
-
-service apache2 start
-
-echo "creating webpages."
-
-touch /var/www/html/welcome.html
-
-touch /var/www/html/contact_us.html
-
-touch /var/www/html/login.html
-
-touch /var/www/html/find_us.html
-
-touch /var/www/html/secret.html
+    service apache2 start
 
 
+    touch /var/www/html/welcome.html
+
+    cat > /var/www/html/welcome.html << EOF
+
+EOF
+
+    touch /var/www/html/contact_us.html
+
+    cat > /var/www/html/contact_us << EOF
+
+EOF
+
+    touch /var/www/html/login.html
+
+    cat > /var/www/html/login.html << EOF
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>login</title>
+    <link href="bootstrap/dist/css/bootstrap.css" rel="stylesheet">
+  <style>
+  .header {
+    position: relative;
+    left: 65px;
+    padding-bottom: 40px;
+    text-align: center;
+  }
+
+  .login_box {
+    background-color: white;
+    position: relative;
+    left: 1125px;
+  }
+
+  .bottom{
+        position:relative;
+        text-align: center;
+        top: 818px;
+        left: 75px;
+      }
+  </style>
+
+  </head>
+  <body>
+
+    <div class="container">
+        <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
+          <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
+            <svg class="bi me-2" width="40" height="32"><use xlink:href="#bootstrap"/></svg>
+            <span class="fs-4">Hogwarts</span>
+          </a>
+
+          <ul class="nav nav-pills">
+            <li class="nav-item"><a href="home.html" class="nav-link" aria-current="page">Home</a></li>
+            <li class="nav-item"><a href="About.html" class="nav-link">About</a></li>
+            <li class="nav-item"><a href="opening hours.html" class="nav-link">opening hours</a></li>
+            <li class="nav-item"><a href="Contact_Us.html" class="nav-link">Contact Us</a></li>
+            <li class="nav-item"><a href="Login.html" class="nav-link active">Login</a></li>
+          </ul>
+        </header>
+      </div>
+
+    <h1 class="header">Login Page</h1>
+
+    <div class="login_box">
+        <form>
+            <div class="mb-3" style="width:450px;">
+                <label for="exampleInputEmail1" class="form-label">Username</label>
+                <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+            </div>
+            <div class="mb-3" style="width:450px;">
+                <label for="exampleInputPassword1" class="form-label">Password</label>
+                <input type="password" class="form-control" id="exampleInputPassword1">
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+
+    <div class="bottom">
+      <p>This site was created by Dobby the house elf. - 2023</p>
+    </div>
+
+  </body>
+</html>
+
+EOF
 
 
 
+
+    touch /var/www/html/find_us.html
+
+    cat > /var/www/html/find_us.html << EOF
+
+EOF
+
+    touch /var/www/html/secret.html
+
+    cat > /var/www/html/secret.html << EOF
+
+EOF
+
+    service apache2 start
+
+}
+
+function _install_bootstrap ()
+{
+    if [[ ! -f /home/gerwyn/bootstrap.zip ]] then
+    wget -O /home/gerwyn/bootstrap.zip https://github.com/twbs/bootstrap/archive/v5.1.3.zip
+    echo "Downloaded bootstrap"
+    else
+    echo "Bootstrap already installed."
+    fi
+
+    apt install unzip
+
+    unzip /home/gerwyn/bootstrap.zip -d  /home/gerwyn/bootstrap
+
+    mkdir /var/www/html/bootstrap
+
+    mkdir /var/www/html/bootstrap/dist
+
+    mkdir /var/www/html/bootstrap/dist/css
+
+    mkdir /var/www/html/bootstrap/dist/js
+
+    mkdir /var/www/html/bootstrap/site
+
+    mkdir /var/www/html/bootstrap/site/content/
+
+    mkdir /var/www/html/bootstrap/site/content/docs
+
+    mkdir /var/www/html/bootstrap/site/content/docs/5.1
+
+    mkdir /var/www/html/bootstrap/site/content/docs/5.1/examples
+
+    mkdir /var/www/html/bootstrap/js
+
+    mkdir /var/www/html/bootstrap/scss
+
+    cp -r /home/gerwyn/bootstrap/bootstrap-5.1.3/dist /var/www/html/bootstrap/
+
+    cp -r /home/gerwyn/bootstrap/bootstrap-5.1.3/site /var/www/html/bootstrap/
+
+    cp -r /home/gerwyn/bootstrap/bootstrap-5.1.3/js /var/www/html/bootstrap/
+
+    cp -r /home/gerwyn/bootstrap/bootstrap-5.1.3/scss /var/www/html/bootstrap/
+}
+
+
+
+
+
+_set_hostname
+
+_backup_network_config
+
+_create_network_config
+
+_configuring_host_file
+
+_downloading_SAMBA_application
+
+_setting_up_SAMBA
+
+_download_SQL
+
+_set_up_database
+
+_install_web_server
+
+_install_bootstrap
+
+service apache2 restart
