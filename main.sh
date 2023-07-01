@@ -1,17 +1,19 @@
 #!/usr/bin/env bash
 
-hostname="hogwarts"
-ip="10.0.20.4"
+#hostname="hogwarts"
+#ip="10.0.20.4"
 
-character_one="harry"
-character_two="hagrid"
-
-password_one="password123"
-password_two="password123"
+#character_one="harry"
+#character_two="hagrid"
+#character_three=
 
 
+#password_one="password123"
+#password_two="password123"
 
-#source hogwarts_variables.sh
+
+
+source Hogwarts_variables.sh
 #source ACME_variables.sh
 #source Chocolate_factory_variables.sh
 #source xmen_variables.sh
@@ -19,7 +21,7 @@ password_two="password123"
 
 function _set_hostname ()
 {
-    hostnamectl set-hostname $hostname
+    hostnamectl set-hostname $HOSTNAME
 
     if [[ $? -eq 0 ]]; then
         echo "Hostname change: SUCCESSFUL"
@@ -58,12 +60,12 @@ function _create_network_config ()
         ethernets:
             enp0s3:
                 addresses:
-                    - ${ip}/24
+                    - ${IP}/24
                 nameservers:
-                    addresses: [8.8.8.8]
+                    addresses: [8.8.8.8, ${GATEWAY_IP}]
                 routes:
                     - to: default
-                    via: 10.1.30.254
+                    via: ${GATEWAY_IP}
 EOF
 
     if [[ $? -eq 0 ]]; then
@@ -77,7 +79,7 @@ function _configuring_host_file ()
 {
     cat > /etc/hosts << EOF
     127.0.0.1 localhost
-    127.0.1.1 ${hostname}
+    127.0.1.1 ${HOSTNAME}
 
     # The following lines are desirable for IPv6 capable hosts
     ::1     ip6-localhost ip6-loopback
@@ -111,22 +113,37 @@ function _downloading_SAMBA_application ()
 function _setting_up_SAMBA ()
 {
 
-    cat > /home/$USER/password.txt << EOF
+    cat > /$HOME/password.txt << EOF
     $character_one:$password_one
     $character_two:$password_two
+    $character_three:$password_three
+    $character_four:$password_four
+    $character_five:$password_five
+    $character_six:$password_six
+    $character_seven:$password_seven
 EOF
 
-    cat /home/$USER/password.txt
+    cat /$HOME/password.txt
 
     useradd -m $character_one
     useradd -m $character_two
+    useradd -m $character_three
+    useradd -m $character_four
+    useradd -m $character_five
+    useradd -m $character_six
+    useradd -m $character_seven
 
-    chpasswd < /home/$USER/password.txt
+    chpasswd < /$HOME/password.txt
 
-    rm /home/$USER/password.txt
+    rm /$HOME/password.txt
 
     echo -ne "$password_one\n$password_one\n" | smbpasswd -a -s $character_one
     echo -ne "$password_two\n$password_two\n" | smbpasswd -a -s $character_two
+    echo -ne "$password_three\n$password_three\n" | smbpasswd -a -s $character_three
+    echo -ne "$password_four\n$password_four\n" | smbpasswd -a -s $character_four
+    echo -ne "$password_five\n$password_five\n" | smbpasswd -a -s $character_five
+    echo -ne "$password_six\n$password_six\n" | smbpasswd -a -s $character_six
+    echo -ne "$password_seven\n$password_seven\n" | smbpasswd -a -s $character_seven
 
     cat >> /etc/samba/smb.conf << EOF
     [Secret_Drive]
@@ -161,8 +178,6 @@ function _download_SQL ()
 }
 
 
-
-
 function _set_up_database ()
 {
 
@@ -185,13 +200,25 @@ EOF
 
     mysql -e "USE exploitable;"
 
-    mysql -e "USE exploitable; CREATE TABLE IF NOT EXISTS accounts(cid INT NOT NULL AUTO_INCREMENT, username TEXT, password TEXT, is_admin VARCHAR(5), firstname TEXT, lastname TEXT, PRIMARY KEY(cid));"
+    mysql -e "USE exploitable; CREATE TABLE IF NOT EXISTS accounts(cid INT NOT NULL AUTO_INCREMENT, username TEXT, password TEXT, is_admin VARCHAR(5), firstname TEXT, lastname TEXT, signature TEXT, PRIMARY KEY(cid));"
 
-    mysql -e "USE exploitable; INSERT INTO accounts (username, password, is_admin, firstname, lastname) VALUES ('gerwyn', 'password', 'TRUE', 'Gerwyn', 'George');"
+    mysql -e "USE exploitable; INSERT INTO accounts (username, password, is_admin, firstname, lastname, signature) VALUES ('gerwyn', 'password', 'TRUE', 'Gerwyn', 'George', 'Here is my signature');"
+
+    mysql -e "USE exploitable; INSERT INTO accounts (username, password, is_admin, firstname, lastname, signature) VALUES ('$db_character_one_user', '$db_character_one_password', '$db_character_one_is_admin', '$db_character_one_firstname', '$db_character_one_lastname', '$db_character_one_signature');"
+
+    mysql -e "USE exploitable; INSERT INTO accounts (username, password, is_admin, firstname, lastname, signature) VALUES ('$db_character_two_user', '$db_character_two_password', '$db_character_two_is_admin', '$db_character_two_firstname', '$db_character_two_lastname', '$db_character_two_signature');"
+
+    mysql -e "USE exploitable; INSERT INTO accounts (username, password, is_admin, firstname, lastname, signature) VALUES ('$db_character_three_user', '$db_character_three_password', '$db_character_three_is_admin', '$db_character_three_firstname', '$db_character_three_lastname', '$db_character_three_signature');"
+
+    mysql -e "USE exploitable; INSERT INTO accounts (username, password, is_admin, firstname, lastname, signature) VALUES ('$db_character_four_user', '$db_character_four_password', '$db_character_four_is_admin', '$db_character_four_firstname', '$db_character_four_lastname', '$db_character_four_signature');"
+
+    mysql -e "USE exploitable; INSERT INTO accounts (username, password, is_admin, firstname, lastname, signature) VALUES ('$db_character_five_user', '$db_character_five_password', '$db_character_five_is_admin', '$db_character_five_firstname', '$db_character_five_lastname', '$db_character_five_signature');"
+
+    mysql -e "USE exploitable; INSERT INTO accounts (username, password, is_admin, firstname, lastname, signature) VALUES ('$db_character_six_user', '$db_character_six_password', '$db_character_six_is_admin', '$db_character_six_firstname', '$db_character_six_lastname', '$db_character_six_signature');"
+
+    mysql -e "USE exploitable; INSERT INTO accounts (username, password, is_admin, firstname, lastname, signature) VALUES ('${db_character_seven_user}', '${db_character_seven_password}', '${db_character_seven_is_admin}', '${db_character_seven_firstname}', '${db_character_seven_lastname}', '${db_character_seven_signature}');"
 
     mysql -e "USE exploitable; SELECT * FROM accounts;"
-
-
 
 }
 
@@ -250,7 +277,7 @@ function _install_web_server ()
             <svg class="bi me-2" width="40" height="32"><use xlink:href="#bootstrap"/></svg>
             <span class="fs-4">Hogwarts</span>
           </a>
-    
+
           <ul class="nav nav-pills">
             <li class="nav-item"><a href="home.html" class="nav-link active" aria-current="page">Home</a></li>
             <li class="nav-item"><a href="About.html" class="nav-link">About</a></li>
@@ -264,8 +291,8 @@ function _install_web_server ()
     <h1 class="header">Welcome</h1>
 
     <div class="text">
-        <p> Welcome to the Hogwarts homepage and thank you for visiting our site.</p> 
-        <p>Please use the navigation bar at the top of the webpage to navigate around the website.</p> 
+        <p> Welcome to the Hogwarts homepage and thank you for visiting our site.</p>
+        <p>Please use the navigation bar at the top of the webpage to navigate around the website.</p>
         <p>We hope that you will enjoy your time here.</p>
     </div>
 
@@ -296,7 +323,7 @@ EOF
     .title{
       position: relative;
       left: 1200px;
-      top: 40px; 
+      top: 40px;
       padding-bottom: 40px;
 
     }
@@ -305,7 +332,7 @@ EOF
       left: 650px;
       top: 75px;
 
-      width: 1200px;  
+      width: 1200px;
     }
 
     .bottom{
@@ -316,9 +343,9 @@ EOF
 
         }
 
-    
+
   </style>
-  
+
   </head>
 
   <body>
@@ -329,7 +356,7 @@ EOF
             <svg class="bi me-2" width="40" height="32"><use xlink:href="#bootstrap"/></svg>
             <span class="fs-4">Hogwarts</span>
           </a>
-    
+
           <ul class="nav nav-pills">
             <li class="nav-item"><a href="home.html" class="nav-link" aria-current="page">Home</a></li>
             <li class="nav-item"><a href="About.html" class="nav-link">About</a></li>
@@ -572,7 +599,7 @@ EOF
             <svg class="bi me-2" width="40" height="32"><use xlink:href="#bootstrap"/></svg>
             <span class="fs-4">Hogwarts</span>
           </a>
-    
+
           <ul class="nav nav-pills">
             <li class="nav-item"><a href="home.html" class="nav-link" aria-current="page">Home</a></li>
             <li class="nav-item"><a href="About.html" class="nav-link active">About</a></li>
@@ -586,8 +613,8 @@ EOF
     <h1 class="header">About</h1>
 
     <div class="text">
-      <p> Hogwarts School of Witchcraft and Wizardry is a boarding school.</p> 
-      <p>For young witches and wizards that was founded around the 9th and 10 centry</p> 
+      <p> Hogwarts School of Witchcraft and Wizardry is a boarding school.</p>
+      <p>For young witches and wizards that was founded around the 9th and 10 centry</p>
       <p>by Godric Gryffindor, Rowena Ravenclaw, Helga Hufflepuff and Salazar Slytherin.</p>
   </div>
 
@@ -635,7 +662,7 @@ EOF
       top: 818px;
       left: 75px;
     }
-    
+
   </style>
 
   </head>
@@ -647,7 +674,7 @@ EOF
             <svg class="bi me-2" width="40" height="32"><use xlink:href="#bootstrap"/></svg>
             <span class="fs-4">Hogwarts</span>
           </a>
-    
+
           <ul class="nav nav-pills">
             <li class="nav-item"><a href="home.html" class="nav-link" aria-current="page">Home</a></li>
             <li class="nav-item"><a href="About.html" class="nav-link">About</a></li>
@@ -669,7 +696,7 @@ EOF
       <p>Friday</p>
       <p>Sunday</p>
     </div>
-    
+
     <div class="bottom">
       <p>This site was created by Dobby the house elf. - 2023</p>
     </div>
