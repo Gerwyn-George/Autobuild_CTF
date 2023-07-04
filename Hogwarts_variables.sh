@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+
 #CTF Machine details
 
 HOSTNAME="Hogwarts"
@@ -102,3 +103,7 @@ CONTACT_EMAIL_FOUR="Hedwig@hogwarts.ac.uk"
 CONTACT_EMAIL_FIVE="Albus.Dumbledore@hogwarts.ac.uk"
 CONTACT_EMAIL_SIX="Severus.Snape@hogwarts.ac.uk"
 CONTACT_EMAIL_SEVEN="Rubeus.Hagrid@hogwarts.ac.uk"
+
+ABOUT_ONE="Hogwarts School of Witchcraft and Wizardry is a boarding school."
+ABOUT_TWO="For young witches and wizards that was founded around the 9th and 10th century"
+ABOUT_THREE="by Godric Gryffindor, Rowena Ravenclaw, Helga Hufflepuff and Salazar Slytherin."
