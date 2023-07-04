@@ -245,6 +245,9 @@ function _install_web_server ()
 
     sed -i "s/SITE_NAME/$SITE_NAME/" /var/www/html/About.html
     sed -i "s/WEBSITE_CREATED_BY/$WEBSITE_CREATED_BY/" /var/www/html/About.html
+    sed -i "s/ABOUT_ONE/$ABOUT_ONE/" /var/www/html/About.html
+    sed -i "s/ABOUT_TWO/$ABOUT_TWO/" /var/www/html/About.html
+    sed -i "s/ABOUT_THREE/$ABOUT_THREE/" /var/www/html/About.html
 
     #Opening hours page
 
