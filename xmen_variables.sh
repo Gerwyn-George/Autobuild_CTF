@@ -88,3 +88,20 @@ db_character_seven_signature="It\'s not animal, it'\s Beast."
 
 
 #Webserver variables
+SITE_NAME="Xaviers school for gifted youngsters"
+
+WEBSITE_CREATED_BY="This website was created by Wolverine. - 2023"
+
+WELCOME="Welcome to the schools webpage, thank you for visiting our site."
+
+CONTACT_EMAIL_ONE="Professor_X@xaviers-school-for-the-gifted.edu"
+CONTACT_EMAIL_TWO="Wolverine@xaviers-school-for-the-gifted.edu"
+CONTACT_EMAIL_THREE="Jean_grey@xaviers-school-for-the-gifted.edu"
+CONTACT_EMAIL_FOUR="Rouge@xaviers-school-for-the-gifted.edu"
+CONTACT_EMAIL_FIVE="Cyclops@xaviers-school-for-the-gifted.edu"
+CONTACT_EMAIL_SIX="Storm@xaviers-school-for-the-gifted.edu"
+CONTACT_EMAIL_SEVEN="Beast@xaviers-school-for-the-gifted.edu"
+
+ABOUT_ONE="The xaviever's School for Gifted Youngsters is a special institute"
+ABOUT_TWO="founded and lead by Professor Charles Xavier to train young mutants"
+ABOUT_THREE="in controlling their powers and help foster a friendly human-mutant relationship."
