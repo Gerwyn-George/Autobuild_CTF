@@ -137,35 +137,34 @@ EOF
 
     rm /$HOME/password.txt
 
-    echo -ne "$password_one\n$password_one\n" | smbpasswd -a -s $character_one
-    echo -ne "$password_two\n$password_two\n" | smbpasswd -a -s $character_two
-    echo -ne "$password_three\n$password_three\n" | smbpasswd -a -s $character_three
-    echo -ne "$password_four\n$password_four\n" | smbpasswd -a -s $character_four
-    echo -ne "$password_five\n$password_five\n" | smbpasswd -a -s $character_five
-    echo -ne "$password_six\n$password_six\n" | smbpasswd -a -s $character_six
-    echo -ne "$password_seven\n$password_seven\n" | smbpasswd -a -s $character_seven
+    echo -ne "$password_one\n$password_one\n" | smbpasswd -a -e -s $character_one
+    echo -ne "$password_two\n$password_two\n" | smbpasswd -a -e -s $character_two
+    echo -ne "$password_three\n$password_three\n" | smbpasswd -a -e -s $character_three
+    echo -ne "$password_four\n$password_four\n" | smbpasswd -a -e -s $character_four
+    echo -ne "$password_five\n$password_five\n" | smbpasswd -a -e -s $character_five
+    echo -ne "$password_six\n$password_six\n" | smbpasswd -a -e -s $character_six
+    echo -ne "$password_seven\n$password_seven\n" | smbpasswd -a -e -s $character_seven
 
     cat >> /etc/samba/smb.conf << EOF
     [Secret_Drive]
     comment = Secret shared drive do not add files here.
     browseable = yes
     writable = yes
-    path = /tmp
+    path = /srv/Secret_Drive
     guest ok = yes
 EOF
 
 
+    #Create shared drive
+    mkdir /srv/Secret_Drive
+
     #Modify the workgroup to show the Third secret Flag.
     sed -i "s/WORKGROUP/FLAG{$SECRET_KEY_THREE}/" /etc/samba/smb.conf
 
-
-
-
     #This file is the key within the shared drive.
-    touch /tmp/note
+    touch /srv/Secret_Drive/note.txt
 
-    echo "FLAG{$SECRET_KEY_FOUR}" >> /tmp/note
-
+    echo "FLAG{$SECRET_KEY_FOUR}" >> /srv/Secret_Drive/note.txt
 
     service smbd start
 
