@@ -89,3 +89,20 @@ db_character_seven_signature="I looka, I say, looka here."
 
 
 #Webserver variables
+SITE_NAME="ACME Factory"
+
+WEBSITE_CREATED_BY="This website was created by the Tasmanian Devil - 2023"
+
+WELCOME="Welcome to the ACME factories webpage, thank you for visiting our site."
+
+CONTACT_EMAIL_ONE="Bugs@ACME-factory.com"
+CONTACT_EMAIL_TWO="Lola@ACME-factory.com"
+CONTACT_EMAIL_THREE="Daffy@ACME-factory.com"
+CONTACT_EMAIL_FOUR="Road@ACME-factory.com"
+CONTACT_EMAIL_FIVE="Porky@ACME-factory.com"
+CONTACT_EMAIL_SIX="Wile_E@ACME-factory.com"
+CONTACT_EMAIL_SEVEN="Foghorn@ACME-factory.com"
+
+ABOUT_ONE="The ACME factory specialises in the creation a wide range of"
+ABOUT_TWO="products ranging from rockets to rather heavy pianos. "
+ABOUT_THREE="Our key shareholder is Wile.E Coyote."
