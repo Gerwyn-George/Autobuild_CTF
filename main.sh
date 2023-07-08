@@ -154,6 +154,19 @@ EOF
     guest ok = yes
 EOF
 
+
+    #Modify the workgroup to show the Third secret Flag.
+    sed -i "s/WORKGROUP/FLAG{$SECRET_KEY_THREE}/" /etc/samba/smb.conf
+
+
+
+
+    #This file is the key within the shared drive.
+    touch /tmp/note
+
+    echo "FLAG{$SECRET_KEY_FOUR}" >> /tmp/note
+
+
     service smbd start
 
     if [[ $? -eq 0 ]]; then
@@ -190,6 +203,8 @@ EOF
 
     service mysql start
 
+    mysql -e "DROP DATABASE IF EXISTS exploitable;"
+
     mysql -e "CREATE DATABASE IF NOT EXISTS exploitable;"
 
     mysql -e "CREATE USER 'gerwyn'@'localhost' IDENTIFIED BY '';"
@@ -202,7 +217,7 @@ EOF
 
     mysql -e "USE exploitable; CREATE TABLE IF NOT EXISTS accounts(cid INT NOT NULL AUTO_INCREMENT, username TEXT, password TEXT, is_admin VARCHAR(5), firstname TEXT, lastname TEXT, signature TEXT, PRIMARY KEY(cid));"
 
-    mysql -e "USE exploitable; INSERT INTO accounts (username, password, is_admin, firstname, lastname, signature) VALUES ('gerwyn', 'password', 'TRUE', 'Gerwyn', 'George', 'Here is my signature');"
+    #mysql -e "USE exploitable; INSERT INTO accounts (username, password, is_admin, firstname, lastname, signature) VALUES ('gerwyn', 'password', 'TRUE', 'Gerwyn', 'George', 'Here is my signature');"
 
     mysql -e "USE exploitable; INSERT INTO accounts (username, password, is_admin, firstname, lastname, signature) VALUES ('$db_character_one_user', '$db_character_one_password', '$db_character_one_is_admin', '$db_character_one_firstname', '$db_character_one_lastname', '$db_character_one_signature');"
 

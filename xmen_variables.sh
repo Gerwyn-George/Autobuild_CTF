@@ -105,3 +105,22 @@ CONTACT_EMAIL_SEVEN="Beast@xaviers-school-for-the-gifted.edu"
 ABOUT_ONE="The xaviever's School for Gifted Youngsters is a special institute"
 ABOUT_TWO="founded and lead by Professor Charles Xavier to train young mutants"
 ABOUT_THREE="in controlling their powers and help foster a friendly human-mutant relationship."
+
+#Secret keys
+
+#Source code secret key (Zer0sh0ck Binary)
+SECRET_FLAG_ONE="01011010 01100101 01110010 00110000 01110011 01101000 00110000 01100011 01101011"
+
+#Secret directory secret key (L0gicB0mbe Hex)
+SECRET_FLAG_TWO="0x4c 0x30 0x67 0x69 0x63 0x42 0x30 0x6d 0x62 0x65"
+
+#SMB enumeration secret key (3301 base64)
+SECRET_FLAG_THREE="MzMwMQ=="
+
+#Shared drive key secret key (Petabyte octal)
+SECRET_FLAG_FOUR="120 145 164 141 142 171 164 145 012"
+
+#SQL injection secret key (Synergists decimal)
+SECRET_FLAG_FIVE="83 121 110 101 114 103 105 115 116 115 10"
+
+
