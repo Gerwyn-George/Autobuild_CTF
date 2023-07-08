@@ -113,7 +113,7 @@ function _downloading_SAMBA_application ()
 function _setting_up_SAMBA ()
 {
 
-    cat > /$HOME/password.txt << EOF
+    cat > /$HOME/password << EOF
     $character_one:$password_one
     $character_two:$password_two
     $character_three:$password_three
@@ -123,7 +123,7 @@ function _setting_up_SAMBA ()
     $character_seven:$password_seven
 EOF
 
-    cat /$HOME/password.txt
+    cat /$HOME/password
 
     useradd -m $character_one
     useradd -m $character_two
@@ -133,9 +133,9 @@ EOF
     useradd -m $character_six
     useradd -m $character_seven
 
-    chpasswd < /$HOME/password.txt
+    chpasswd < /$HOME/password
 
-    rm /$HOME/password.txt
+    rm /$HOME/password
 
     echo -ne "$password_one\n$password_one\n" | smbpasswd -a -e -s $character_one
     echo -ne "$password_two\n$password_two\n" | smbpasswd -a -e -s $character_two
@@ -162,9 +162,9 @@ EOF
     sed -i "s/WORKGROUP/FLAG{$SECRET_KEY_THREE}/" /etc/samba/smb.conf
 
     #This file is the key within the shared drive.
-    touch /srv/Secret_Drive/note.txt
+    touch /srv/Secret_Drive/note
 
-    echo "FLAG{$SECRET_KEY_FOUR}" >> /srv/Secret_Drive/note.txt
+    echo "FLAG{$SECRET_KEY_FOUR}" >> /srv/Secret_Drive/note
 
     service smbd start
 
