@@ -279,6 +279,12 @@ function _install_web_server ()
     #sed -i "/WEBSITE_CREATED_BY/$WEBSITE_CREATED_BY/" /var/www/html/login.html
 
 
+    #secret page
+
+    cp /home/gerwyn/secret.html /var/www/html/secret.html 
+
+    sed -i "s/SECRET_FLAG_TWO/$SECRET_FLAG_TWO/" /var/www/html/secret.html
+
     #Contact Us page set up.
 
     cp /home/gerwyn/Contact_Us.html /var/www/html/Contact_Us.html
@@ -321,7 +327,7 @@ function _install_web_server ()
 
 function _install_bootstrap ()
 {
-    if [[ ! -f /home/gerwyn/bootstrap.zip ]] then
+    if [[ ! -f /home/gerwyn/bootstrap.zip ]] ; then
     wget -O /home/gerwyn/bootstrap.zip https://github.com/twbs/bootstrap/archive/v5.1.3.zip
     echo "Downloaded bootstrap"
     else
