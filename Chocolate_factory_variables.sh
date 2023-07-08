@@ -88,3 +88,21 @@ db_character_seven_signature="Squeak!"
 
 
 #Webserver variables
+SITE_NAME="Willy Wonka's Chocolate Factory"
+
+WEBSITE_CREATED_BY="This website was created by an Ommpa Loompa. - 2023"
+
+WELCOME="Welcome to the chocolate factories webpage, thank you for visiting our site."
+
+CONTACT_EMAIL_ONE="Willy@chocolate-factory.co.uk"
+CONTACT_EMAIL_TWO="Charlie@chocolate-factory.co.uk"
+CONTACT_EMAIL_THREE="Grandpa@chocolate-factory.co.uk"
+CONTACT_EMAIL_FOUR="William@chocolate-factory.co.uk"
+CONTACT_EMAIL_FIVE="Hellen@chocolate-factory.co.uk"
+CONTACT_EMAIL_SIX="Ommpa_Loompa@chocolate-factory.co.uk"
+CONTACT_EMAIL_SEVEN="Squirrel@chocolate-factory.co.uk"
+
+ABOUT_ONE="Willy Wonka's chocolate factory was founded by Willy Wonka"
+ABOUT_TWO="with the aim of creating magical chocolate treats and sweets"
+ABOUT_THREE="with assistance from a few Oompa Loompas."
+
