@@ -300,7 +300,7 @@ function _install_web_server ()
 
     sed -i "s/SITE_NAME/$SITE_NAME/" "/var/www/html/time.html"
     sed -i "s/WEBSITE_CREATED_BY/$WEBSITE_CREATED_BY/" "/var/www/html/time.html"
-
+    sed -i "s/SECRET_FLAG_ONE/$SECRET_FLAG_ONE/" "/var/www/html/time.html"
 
     #Login page
 
@@ -373,7 +373,7 @@ function _install_bootstrap ()
         echo "Creating directory."
         mkdir /var/www/html/bootstrap
     else
-        echo "Directory already exists."
+        echo "Directory already exsists."
     fi
 
 
@@ -381,7 +381,7 @@ function _install_bootstrap ()
         echo "Creating directory."
         mkdir /var/www/html/bootstrap/dist
     else
-        echo "Directory already exists."
+        echo "Directory already exsists."
     fi
 
 
@@ -389,7 +389,7 @@ function _install_bootstrap ()
         echo "Creating directory."
         mkdir /var/www/html/bootstrap/dist/css
     else
-        echo "Directory already exists"
+        echo "Directory already exsists"
     fi
 
 
@@ -397,7 +397,7 @@ function _install_bootstrap ()
         echo "Creating directory."
         mkdir /var/www/html/bootstrap/dist/js
     else
-        echo "Directory already exists"
+        echo "Directory already exsists"
     fi
 
 
@@ -405,7 +405,7 @@ function _install_bootstrap ()
         echo "Creating directory."
         mkdir /var/www/html/bootstrap/site
     else
-        echo "Directory already exists."
+        echo "Directory already exsists."
     fi
 
 
@@ -413,7 +413,7 @@ function _install_bootstrap ()
         echo "Creating directory."
         mkdir /var/www/html/bootstrap/site/content/
     else
-        echo "Directory already exists."
+        echo "Directory already exsists."
     fi
 
 
@@ -421,7 +421,7 @@ function _install_bootstrap ()
         echo "Creating directory."
         mkdir /var/www/html/bootstrap/site/content/docs
     else
-        echo "Directory already exists."
+        echo "Directory already exsists."
     fi
 
 
@@ -429,7 +429,7 @@ function _install_bootstrap ()
         echo "Creating directory."
         mkdir /var/www/html/bootstrap/site/content/docs/5.1
     else
-        echo "Directory already exists."
+        echo "Directory already exsists."
     fi
 
 
@@ -437,7 +437,7 @@ function _install_bootstrap ()
         echo "Creating directory."
         mkdir /var/www/html/bootstrap/site/content/docs/5.1/examples
     else
-        echo "Directory already exists."
+        echo "Directory already exsists."
     fi
 
 
@@ -445,7 +445,7 @@ function _install_bootstrap ()
         echo "Creating directory."
         mkdir /var/www/html/bootstrap/js
     else
-        echo "Directory already exists."
+        echo "Directory already exsists."
     fi
 
 
@@ -453,7 +453,7 @@ function _install_bootstrap ()
         echo "Creating directory."
         mkdir /var/www/html/bootstrap/scss
     else
-        echo "Directory already exists."
+        echo "Directory already exsists."
     fi
 
     cp -rf /home/gerwyn/bootstrap/bootstrap-5.1.3/dist /var/www/html/bootstrap/
