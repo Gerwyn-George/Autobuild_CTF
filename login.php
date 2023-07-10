@@ -83,8 +83,8 @@
 if(isset($_POST['submit']))
 {
         $servername = "localhost";
-        $username = "gerwyn";
-        $password = "";
+        $username = "admin_account";
+        $password = "password";
         $database = "exploitable";
 
         $conn =  mysqli_connect($servername, $username, $password, $database);
@@ -98,7 +98,7 @@ if(isset($_POST['submit']))
 
         }
         try{
-                $sql = "SELECT * FROM accounts WHERE username = '${lusername}' AND password = '${lpassword}'";
+                $sql = "SELECT * FROM accounts WHERE username='${lusername}' AND password='${lpassword}'";
                 $result = mysqli_query($conn, $sql);
                 $queryresult = mysqli_num_rows($result);
                 if($queryresult > 0){
