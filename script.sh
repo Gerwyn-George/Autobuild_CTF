@@ -113,7 +113,7 @@ function _downloading_SAMBA_application ()
 function _setting_up_SAMBA ()
 {
 
-    cat > /$HOME/password << EOF
+    cat > /$HOME/password.txt << EOF
     $character_one:$password_one
     $character_two:$password_two
     $character_three:$password_three
@@ -123,7 +123,7 @@ function _setting_up_SAMBA ()
     $character_seven:$password_seven
 EOF
 
-    cat /$HOME/password
+    cat /$HOME/password.txt
 
     useradd -m $character_one
     useradd -m $character_two
@@ -133,9 +133,19 @@ EOF
     useradd -m $character_six
     useradd -m $character_seven
 
-    chpasswd < /$HOME/password
+#    chpasswd < /$HOME/password.txt
 
-    rm /$HOME/password
+    echo $character_one:$password_one | sudo chpasswd
+    echo $character_two:$password_two | sudo chpasswd
+    echo $character_three:$password_three |sudo chpasswd
+    echo $character_four:$password_four | sudo chpasswd
+    echo $character_five:$password_five | sudo chpasswd
+    echo $character_six:$password_six | sudo chpasswd
+    echo $character_seven:$password_seven | sudo chpasswd
+
+
+
+    rm /$HOME/password.txt
 
     echo -ne "$password_one\n$password_one\n" | smbpasswd -a -s $character_one
     echo -ne "$password_two\n$password_two\n" | smbpasswd -a -s $character_two
@@ -246,7 +256,7 @@ EOF
 
     #mysql -e "USE exploitable; INSERT INTO accounts (username, password, is_admin, firstname, lastname, signature) VALUES ('gerwyn', 'password', 'TRUE', 'Gerwyn', 'George', 'Here is my signature');"
 
-    mysql -e "USE exploitable; INSERT INTO accounts (username, password, is_admin, firstname, lastname, signature) VALUES ('$db_character_one_user', '$db_character_one_password', '$db_character_one_is_admin', '$db_character_one_firstname', '$db_character_one_lastname', '$db_character_one_signature');"
+    mysql -e "USE exploitable; INSERT INTO accounts (username, password, is_admin, firstname, lastname, signature) VALUES ('$db_character_one_user', '$db_character_one_password', '$db_character_one_is_admin', '$db_character_one_firstname', '$db_character_one_lastname', 'FLAG{$SECRET_FLAG_FIVE}');"
 
     mysql -e "USE exploitable; INSERT INTO accounts (username, password, is_admin, firstname, lastname, signature) VALUES ('$db_character_two_user', '$db_character_two_password', '$db_character_two_is_admin', '$db_character_two_firstname', '$db_character_two_lastname', '$db_character_two_signature');"
 
