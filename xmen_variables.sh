@@ -15,13 +15,13 @@ character_five="Cyclops"
 character_six="Storm"
 character_seven="Beast"
 
-password_one="password123"
-password_two="password123"
-password_three="password123"
-password_four="password123"
-password_five="password123"
-password_six="password123"
-password_seven="password123"
+password_one='password123'
+password_two='password123'
+password_three='password123'
+password_four='password123'
+password_five='password123'
+password_six='password123'
+password_seven='password123'
 
 #Here is the Database information variables
 
@@ -122,5 +122,4 @@ SECRET_FLAG_FOUR="120 145 164 141 142 171 164 145 012"
 
 #SQL injection secret key (Synergists decimal)
 SECRET_FLAG_FIVE="83 121 110 101 114 103 105 115 116 115 10"
-
 
