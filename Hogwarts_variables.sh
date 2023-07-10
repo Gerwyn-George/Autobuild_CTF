@@ -15,13 +15,13 @@ character_five="Albus"
 character_six="Severus"
 character_seven="Rubeus"
 #
-password_one="password123"
-password_two="password123"
-password_three="password123"
-password_four="password123"
-password_five="password123"
-password_six="password123"
-password_seven="password123"
+password_one='password123'
+password_two='password123'
+password_three='password123'
+password_four='password123'
+password_five='password123'
+password_six='password123'
+password_seven='password123'
 #
 #Here is the Database information variable
 #
