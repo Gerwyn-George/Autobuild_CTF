@@ -46,7 +46,7 @@
         <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
           <a href="home.html" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
             <svg class="bi me-2" width="40" height="32"><use xlink:href="#bootstrap"></use></svg>
-            <span class="fs-4">Hogwarts</span>
+            <span class="fs-4">SITE_NAME</span>
           </a>
 
           <ul class="nav nav-pills">
@@ -113,7 +113,7 @@ if(isset($_POST['submit']))
                         }
                 }
                 else{
-                        echo '<p class="info_box">No infomation found, please try again.</p>';
+                        echo '<p class="info_box">No information found, please try again.</p>';
                 }
         }
         catch(Exception $e) {
