@@ -137,13 +137,21 @@ EOF
 
     rm /$HOME/password
 
-    echo -ne "$password_one\n$password_one\n" | smbpasswd -a -e -s $character_one
-    echo -ne "$password_two\n$password_two\n" | smbpasswd -a -e -s $character_two
-    echo -ne "$password_three\n$password_three\n" | smbpasswd -a -e -s $character_three
-    echo -ne "$password_four\n$password_four\n" | smbpasswd -a -e -s $character_four
-    echo -ne "$password_five\n$password_five\n" | smbpasswd -a -e -s $character_five
-    echo -ne "$password_six\n$password_six\n" | smbpasswd -a -e -s $character_six
-    echo -ne "$password_seven\n$password_seven\n" | smbpasswd -a -e -s $character_seven
+    echo -ne "$password_one\n$password_one\n" | smbpasswd -a -s $character_one
+    echo -ne "$password_two\n$password_two\n" | smbpasswd -a -s $character_two
+    echo -ne "$password_three\n$password_three\n" | smbpasswd -a -s $character_three
+    echo -ne "$password_four\n$password_four\n" | smbpasswd -a -s $character_four
+    echo -ne "$password_five\n$password_five\n" | smbpasswd -a -s $character_five
+    echo -ne "$password_six\n$password_six\n" | smbpasswd -a -s $character_six
+    echo -ne "$password_seven\n$password_seven\n" | smbpasswd -a -s $character_seven
+
+    smbpasswd -e  $character_one
+    smbpasswd -e  $character_two
+    smbpasswd -e  $character_three
+    smbpasswd -e  $character_four
+    smbpasswd -e  $character_five
+    smbpasswd -e  $character_six
+    smbpasswd -e  $character_seven
 
     cat >> /etc/samba/smb.conf << EOF
     [Secret_Drive]
@@ -217,7 +225,7 @@ function _set_up_database ()
     touch /etc/.my.cnf
 
     cat >> /etc/.my.cnf << EOF
-    user=gerwyn
+    user=admin_account
     password=password
 
 EOF
@@ -226,9 +234,9 @@ EOF
 
     mysql -e "CREATE DATABASE IF NOT EXISTS exploitable;"
 
-    mysql -e "CREATE USER 'gerwyn'@'localhost' IDENTIFIED BY '';"
+    mysql -e "CREATE USER IF NOT EXISTS 'admin_account'@'localhost' IDENTIFIED BY 'password';"
 
-    mysql -e "GRANT ALL PRIVILEGES ON *.* TO 'gerwyn'@'localhost' WITH GRANT OPTION;"
+    mysql -e "GRANT ALL PRIVILEGES ON *.* TO 'admin_account'@'localhost' WITH GRANT OPTION;"
 
     mysql -e "FLUSH PRIVILEGES;"
 
@@ -278,7 +286,7 @@ function _install_web_server ()
 
     #Welcome page
 
-    cp /home/gerwyn/home.html /var/www/html/home.html
+    cp /home/admin_account/home.html /var/www/html/home.html
 
     sed -i "s/SITE_NAME/$SITE_NAME/" /var/www/html/home.html
     sed -i "s/WELCOME_MESSAGE/$WELCOME/" /var/www/html/home.html
@@ -286,7 +294,7 @@ function _install_web_server ()
 
     #About page
 
-    cp /home/gerwyn/about.html /var/www/html/about.html
+    cp /home/admin_account/about.html /var/www/html/about.html
 
     sed -i "s/SITE_NAME/$SITE_NAME/" /var/www/html/about.html
     sed -i "s/WEBSITE_CREATED_BY/$WEBSITE_CREATED_BY/" /var/www/html/about.html
@@ -296,7 +304,7 @@ function _install_web_server ()
 
     #Opening hours page
 
-    cp "/home/gerwyn/time.html" "/var/www/html/time.html"
+    cp "/home/admin_account/time.html" "/var/www/html/time.html"
 
     sed -i "s/SITE_NAME/$SITE_NAME/" "/var/www/html/time.html"
     sed -i "s/WEBSITE_CREATED_BY/$WEBSITE_CREATED_BY/" "/var/www/html/time.html"
@@ -304,7 +312,7 @@ function _install_web_server ()
 
     #Login page
 
-    cp "/home/gerwyn/login.php" /var/www/html/login.php
+    cp "/home/admin_account/login.php" /var/www/html/login.php
 
     sed -i "s/SITE_NAME/$SITE_NAME/" /var/www/html/login.php
     sed -i "s/WEBSITE_CREATED_BY/$WEBSITE_CREATED_BY/" /var/www/html/login.php
@@ -312,13 +320,13 @@ function _install_web_server ()
 
     #secret page
 
-    cp /home/gerwyn/secret.html /var/www/html/secret.html
+    cp /home/admin_account/secret.html /var/www/html/secret.html
 
     sed -i "s/SECRET_FLAG_TWO/$SECRET_FLAG_TWO/" /var/www/html/secret.html
     sed -i "s/WEBSITE_CREATED_BY/$WEBSITE_CREATED_BY/" /var/www/html/secret.html
     #Contact Us page set up.
 
-    cp /home/gerwyn/contact_us.html /var/www/html/contact_us.html
+    cp /home/admin_account/contact_us.html /var/www/html/contact_us.html
 
     sed -i "s/SITE_NAME/$SITE_NAME/" /var/www/html/contact_us.html
 
@@ -358,8 +366,8 @@ function _install_web_server ()
 
 function _install_bootstrap ()
 {
-    if [[ ! -f /home/gerwyn/bootstrap.zip ]] ; then
-    wget -O /home/gerwyn/bootstrap.zip https://github.com/twbs/bootstrap/archive/v5.1.3.zip
+    if [[ ! -f /home/admin_account/bootstrap.zip ]] ; then
+    wget -O /home/admin_account/bootstrap.zip https://github.com/twbs/bootstrap/archive/v5.1.3.zip
     echo "Downloaded bootstrap"
     else
     echo "Bootstrap already installed."
@@ -367,7 +375,7 @@ function _install_bootstrap ()
 
     apt install unzip
 
-    unzip -o /home/gerwyn/bootstrap.zip -d  /home/gerwyn/bootstrap
+    unzip -o /home/admin_account/bootstrap.zip -d  /home/admin_account/bootstrap
 
     if [[ ! -d /var/www/html/bootstrap ]] ; then
         echo "Creating directory."
@@ -456,13 +464,13 @@ function _install_bootstrap ()
         echo "Directory already exsists."
     fi
 
-    cp -rf /home/gerwyn/bootstrap/bootstrap-5.1.3/dist /var/www/html/bootstrap/
+    cp -rf /home/admin_account/bootstrap/bootstrap-5.1.3/dist /var/www/html/bootstrap/
 
-    cp -rf /home/gerwyn/bootstrap/bootstrap-5.1.3/site /var/www/html/bootstrap/
+    cp -rf /home/admin_account/bootstrap/bootstrap-5.1.3/site /var/www/html/bootstrap/
 
-    cp -rf /home/gerwyn/bootstrap/bootstrap-5.1.3/js /var/www/html/bootstrap/
+    cp -rf /home/admin_account/bootstrap/bootstrap-5.1.3/js /var/www/html/bootstrap/
 
-    cp -rf /home/gerwyn/bootstrap/bootstrap-5.1.3/scss /var/www/html/bootstrap/
+    cp -rf /home/admin_account/bootstrap/bootstrap-5.1.3/scss /var/www/html/bootstrap/
 }
 
 
